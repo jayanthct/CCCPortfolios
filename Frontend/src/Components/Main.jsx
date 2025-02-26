@@ -44,6 +44,7 @@ const profiles = [
     name: "Yashwanth Sudikonda",
     rollno: "AP22110011149",
     link: "https://portfoliobyyashwanth.netlify.app/",
+    img:"https://portfoliobyyashwanth.netlify.app/assets/img/dp.jpg"
   },
   {
     name: "Avula Manaswini Reddy",
@@ -54,6 +55,7 @@ const profiles = [
     name: "Avinash Reddy Pothireddy",
     rollno: "AP22110010006",
     link: "https://avinashreddyportfolio.netlify.app/",
+    img:"https://avinashreddyportfolio.netlify.app/img/file.png"
   },
   {
     name: "Tejaswi Darsi",
@@ -64,6 +66,7 @@ const profiles = [
     name: "Sushil Pandey",
     rollno: "AP22110010274",
     link: "https://contactsushil.me",
+    img:"https://res.cloudinary.com/dsqztv2t1/image/upload/v1696940910/Assests/c9i37bvvd6mlrrwku1gi.jpg"
   },
   {
     name: "Donga Surendra",
@@ -84,26 +87,31 @@ const profiles = [
     name: "V.Neeharika",
     rollno: "AP22110010906",
     link: "https://unique-rabanadas-90e7d0.netlify.app/",
+    img:"https://unique-rabanadas-90e7d0.netlify.app/about.jpg"
   },
   {
     name: "Bahadursha Kowshik Sree",
     rollno: "AP22110011298",
     link: "https://gojo-domain-expansion.netlify.app/",
+    img:"https://4kwallpapers.com/images/wallpapers/satoru-gojo-pop-art-1290x2796-14158.jpg"
   },
   {
     name: "Likhith Edupuganti",
     rollno: "AP22110010386",
     link: "https://portfoliobylikhith.netlify.app/",
+    img:"https://portfoliobylikhith.netlify.app/About%20me.JPG"
   },
   {
     name: "SRI HASITHA GUDIPATI",
     rollno: "AP22110010075",
     link: "https://srihasithagudipati.netlify.app/",
+    img:"https://srihasithagudipati.netlify.app/assets/profile-pic.jpg"
   },
   {
     name: "YADLA SRIJA",
     rollno: "AP22110010108",
     link: "https://srijayadla.netlify.app/",
+    img:"https://srijayadla.netlify.app/DP.jpg"
   },
 ];
 
