@@ -93,7 +93,6 @@ const profiles = [
     name: "Bahadursha Kowshik Sree",
     rollno: "AP22110011298",
     link: "https://gojo-domain-expansion.netlify.app/",
-    img:"https://4kwallpapers.com/images/wallpapers/satoru-gojo-pop-art-1290x2796-14158.jpg"
   },
   {
     name: "Likhith Edupuganti",
