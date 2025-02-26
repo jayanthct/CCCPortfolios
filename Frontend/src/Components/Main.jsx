@@ -6,6 +6,12 @@ import Input from "./Input";
 const Main = () => {
   const profile = [
     {
+      name: "Samaira",
+      rollno: "AP2211006999",
+      link: "https://www.youtube.com/shorts/aYQ9YZpPH4k",
+      img: "https://d.rapidcdn.app/snapinst?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJodHRwczovL3Njb250ZW50LW11YzItMS5jZG5pbnN0YWdyYW0uY29tL3YvdDUxLjI4ODUtMTUvNDc0OTgwMDIzXzE3ODU4MjQ0OTM2MzU0NjIxXzgwMzQwNzQxNDc4OTIxOTM3ODlfbi53ZWJwP3N0cD1kc3Qtd2VicF9wNjQweDY0MF9zaDAuMDgmZWZnPWV5SjJaVzVqYjJSbFgzUmhaeUk2SW1sdFlXZGxYM1Z5YkdkbGJpNHhORFF3ZURFNE1EQXVjMlJ5TG1ZM05UYzJNUzVrWldaaGRXeDBYMmx0WVdkbEluMCZfbmNfaHQ9c2NvbnRlbnQtbXVjMi0xLmNkbmluc3RhZ3JhbS5jb20mX25jX2NhdD0xMDkmX25jX29jPVE2Y1oyQUU4NTE4N0tEZ0t5eDA4WkVZQnZSaGg4S3RRbVNpNkFjR2RnVmNZc0NWdkVhMklockJSNmphOFpEaW1hOVduM3hzJl9uY19vaGM9dlkxNllzdmxJSThRN2tOdmdFS1U0VFcmX25jX2dpZD0zNjdhMzNiNjU0N2Q0ZGZhOTRlNDhlYmJmNTYxMGE5MiZlZG09QVBzMTdDVUJBQUFBJmNjYj03LTUmb2g9MDBfQVlDRW8zZnBUb01qNkFKSXZYTWRFQTRhQVFkWTVKUEV6YTEwVFJqQVFpNFlGUSZvZT02N0M0QTM0MyZfbmNfc2lkPTEwZDEzYiIsImZpbGVuYW1lIjoiU25hcGluc3QuYXBwX3RodW1iXzQ3NDk4MDAyM18xNzg1ODI0NDkzNjM1NDYyMV84MDM0MDc0MTQ3ODkyMTkzNzg5X24ud2VicCJ9.IwfJtQUV4S81fOjkj36bdvjZjmJp6OcsmkId0wje1Ms",
+    },
+    {
       name: "Nithish Sri Ram",
       rollno: "AP22110010837",
       link: "https://nithish-sri-ram.github.io/My-Portfolio/",
@@ -296,10 +302,9 @@ const Main = () => {
 
   // Function to handle profile deletion
   const handleDelete = (rollno) => {
-  const updatedProfiles = profiles.filter((item) => item.rollno !== rollno);
-  setProfiles(updatedProfiles);
-};
-
+    const updatedProfiles = profiles.filter((item) => item.rollno !== rollno);
+    setProfiles(updatedProfiles);
+  };
 
   return (
     <main className="min-h-screen bg-[#f7f5e9] p-10">
