@@ -289,6 +289,109 @@ const Main = () => {
       link: "https://visionary-daffodil-492375.netlify.app/",
       img: null,
     },
+
+    {
+      name: "Jagadeesh Ospari",
+      rollno: "AP22110011304",
+      link: "https://thisisjagadeesh7569.netlify.app/",
+      img: null
+    },
+    {
+      name: "M.V.N. Sahithi",
+      rollno: "AP22110011133",
+      link: "https://sahithimvn09.github.io/Portfolio/",
+      img: null
+    },
+    {
+      name: "M. Tarun Reddy",
+      rollno: "Ap22110011314",
+      link: "https://eloquent-phoenix-c7c298.netlify.app/",
+      img: null
+    },
+    {
+      name: "P. Vamsi",
+      rollno: "AP22110011376",
+      link: "https://portfolio-p-vamsi.netlify.app/",
+      img: null
+    },
+    {
+      name: "K. Pranav Rithwik",
+      rollno: "AP22110010337",
+      link: "https://pranavportfolio8080.netlify.app/",
+      img: null
+    },
+    {
+      name: "Jagan Venkat Merugu",
+      rollno: "AP22110011396",
+      link: "https://venkat4097.github.io/Portfolio/",
+      img: null
+    },
+    {
+      name: "Gali Lakshmi Pujitha",
+      rollno: "AP22110010206",
+      link: "https://portfolio-glp-232abd.netlify.app/",
+      img: null
+    },
+    {
+      name: "Shaik Nagur Meeravali",
+      rollno: "AP22110010061",
+      link: "https://nagur-meera.netlify.app/",
+      img: null
+    },
+    {
+      name: "Rishitha Pentyala",
+      rollno: "AP22110010054",
+      link: "https://courageous-florentine-1b786d.netlify.app/",
+      img: null
+    },
+    {
+      name: "Guthi Akash",
+      rollno: "AP22110011411",
+      link: "https://akashguthi.github.io/Portfolio/",
+      img: null
+    },
+    {
+      name: "V Bala Narendra Kumar",
+      rollno: "AP22110011386",
+      link: "https://balanarendra-vallamsetty.github.io/portfolio/",
+      img: null
+    },
+    {
+      name: "Harshith Sanisetty",
+      rollno: "AP22110010826",
+      link: "https://harshithsanisettyportfolio.netlify.app/",
+      img: null
+    },
+    {
+      name: "Padyala Chakravarthi",
+      rollno: "AP22110011269",
+      link: "https://chakri-padyala.netlify.app/",
+      img: null
+    },
+    {
+      name: "N. Poojitha Sai Priya",
+      rollno: "AP221100110187",
+      link: "https://poojithasaipriya1.netlify.app/",
+      img: null
+    },
+    {
+      name: "Shaik Khajavali",
+      rollno: "AP22110011377",
+      link: "https://khajavali7869.github.io/portfolio/",
+      img: null
+    },
+    {
+      name: "B. Venkata Gopi Chand",
+      rollno: "AP22110011303",
+      link: "https://thisisgopi.netlify.app/",
+      img: null
+    },
+    {
+      name: "Neshab Alam Ansari",
+      rollno: "AP22110011516",
+      link: "https://neshabansari.netlify.app/",
+      img: null
+    }
   ];
 
   const [profiles, setProfiles] = useState(profile);
