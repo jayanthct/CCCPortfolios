@@ -314,8 +314,10 @@ const Main = () => {
 
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
         {profiles.map((profile) => (
-          <motion.div
+          <motion.a
             key={profile.rollno}
+            href={profile.link}
+            target="_blank"
             className="card cursor-pointer relative flex flex-col justify-center items-center gap-4 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -334,12 +336,12 @@ const Main = () => {
             </p>
 
             <div
-              className="absolute top-2 right-2 bg-red-200 bg-opacity-40 rounded-full p-2 cursor-pointer hover:bg-opacity-60 transition"
+              className="absolute top-4 right-4 bg-red-200 bg-opacity-40 rounded-full p-4 cursor-pointer hover:bg-opacity-60 transition"
               onClick={() => handleDelete(profile.rollno)}
             >
               <FaTrash className="text-red-600" />
             </div>
-          </motion.div>
+          </motion.a>
         ))}
       </div>
     </main>
