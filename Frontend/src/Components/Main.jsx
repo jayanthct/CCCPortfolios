@@ -4,8 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import Input from "./Input";
 
 const Main = () => {
-
-  const profile =[
+  const profile = [
     {
       name: "Nithish Sri Ram",
       rollno: "AP22110010837",
@@ -288,7 +287,6 @@ const Main = () => {
 
   const [profiles, setProfiles] = useState(profile);
 
-
   // Function to get avatar or fallback
   const getAvatarUrl = (name, profile) => {
     return profile.img
@@ -301,6 +299,7 @@ const Main = () => {
     const updatedProfiles = profiles.filter(
       (profile) => profile.rollno !== rollno
     );
+    profile = updatedProfiles;
     setProfiles(updatedProfiles);
   };
 
