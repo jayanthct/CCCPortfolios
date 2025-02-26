@@ -296,12 +296,10 @@ const Main = () => {
 
   // Function to handle profile deletion
   const handleDelete = (rollno) => {
-    const updatedProfiles = profiles.filter(
-      (profile) => profile.rollno !== rollno
-    );
-    profile = updatedProfiles;
-    setProfiles(updatedProfiles);
-  };
+  const updatedProfiles = profiles.filter((item) => item.rollno !== rollno);
+  setProfiles(updatedProfiles);
+};
+
 
   return (
     <main className="min-h-screen bg-[#f7f5e9] p-10">
@@ -319,7 +317,6 @@ const Main = () => {
             target="_blank"
             className="card cursor-pointer relative flex flex-col justify-center items-center gap-4 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow"
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             <img
               src={getAvatarUrl(profile.name, profile)}
