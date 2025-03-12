@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaPen } from "react-icons/fa";
 
 import Input from "./Input";
 
+import resumeicon from "../assets/resumeicon.svg";
+import globe from "../assets/global.svg";
 
 const Main = () => {
   const profile = [
@@ -88,8 +90,8 @@ const Main = () => {
             key={profile.rollno}
             href={profile.link}
             target="_blank"
-            className="card cursor-pointer relative flex flex-col justify-center items-center gap-4 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow"
-            whileHover={{ scale: 1.05 }}
+            className="card cursor-pointer relative flex flex-col justify-center items-center gap-3 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow"
+            // whileHover={{ scale: 1.05 }}
           >
             <img
               src={getAvatarUrl(profile.name, profile)}
@@ -109,6 +111,31 @@ const Main = () => {
               onClick={() => handleDelete(profile.rollno)}
             >
               <FaTrash className="text-red-600" />
+            </div>
+            <div
+              className="absolute right-4 top-18 bg-blue-200 bg-opacity-40 rounded-full p-4 cursor-pointer hover:bg-opacity-60 transition"
+              onClick={() => handleDelete(profile.rollno)}
+            >
+              <FaPen className="text-blue-600" />
+            </div>
+
+            <div className="buttons flex justify-between items-center w-full m-2">
+              <a
+                className="resume flex justify-center items-center  gap-2 px-6 py-2 bg-[#49462311] text-[#494623] rounded-full font-bold"
+                href="#"
+              >
+                {" "}
+                <img src={resumeicon} alt="" className="icon w-6 h-6" />
+                Resume
+              </a>
+              <a
+                className="resume flex justify-center  items-center gap-2 px-6 py-2 bg-[#4692DD22] text-[#4692DD] rounded-full font-bold"
+                href="#"
+              >
+                {" "}
+                <img src={globe} alt="" className="icon w-6 h-6" />
+                Visit Site
+              </a>
             </div>
           </motion.a>
         ))}

@@ -4,11 +4,14 @@ import axios from "axios"; // Import Axios
 import toast from "react-hot-toast";
 import ImageSlider from "./ImageSlider";
 
+import upload from "../assets/upload.svg";
+
 function Input({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
     link: "",
+    file:""
   });
 
   const [error, setError] = useState("");
@@ -24,7 +27,7 @@ function Input({ onSubmit }) {
     const { name, rollno, link, img } = formData;
 
     if (!name || !rollno || !link) {
-      setError("All fields except Image are mandatory.");
+      setError("All fields mandatory.");
       toast.error(error);
       setSuccess("");
       return;
@@ -68,8 +71,7 @@ function Input({ onSubmit }) {
         </div>
         <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
           <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
-            Full Name{" "}
-            <span className="text-[#FF4E59]">*</span>
+            Full Name <span className="text-[#FF4E59]">*</span>
           </label>
           <input
             required
@@ -83,8 +85,7 @@ function Input({ onSubmit }) {
         </fieldset>
         <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
           <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
-            Roll Number{" "}
-            <span className="text-[#FF4E59]">*</span>
+            Roll Number <span className="text-[#FF4E59]">*</span>
           </label>
           <input
             required
@@ -98,8 +99,7 @@ function Input({ onSubmit }) {
         </fieldset>
         <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
           <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
-            Portfolio Link{" "}
-            <span className="text-[#FF4E59]">*</span>
+            Portfolio Link <span className="text-[#FF4E59]">*</span>
           </label>
           <input
             required
@@ -111,7 +111,32 @@ function Input({ onSubmit }) {
             className="w-full h-[52px] mt-1 p-2 pl-4 border-1 border-[#746f2829] rounded-[6px] bg-white cursor-text hover:outline-1 hover:outline-[#746f2862] focus:outline-2 active:border-[#494623]  focus:outline-[#746f28a0] appearance-none"
           />
         </fieldset>
-  
+
+        <fieldset className="flex w-full flex-col items-start justify-between space-y-2">
+          <label className="block text-sm font-semibold text-[#494623] md:text-[16px] text-[14px]">
+            Upload Resume <span className="text-[#FF4E59]">*</span>
+          </label>
+          <div className="relative w-full h-[56px] mt-1 p-2 border-2 border-dashed border-[#746f28a0] rounded-[8px] bg-[#f9f9f9] hover:bg-[#f4f4f4] cursor-pointer transition duration-300 ease-in-out">
+            <input
+              required
+              type="file"
+              name="link"
+              value={formData.file}
+              onChange={handleChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
+            <div className="flex items-center justify-center h-full gap-2 px-4">
+              <img src={upload} alt="" className="upload w-4 h-4" />
+              <p className="text-sm text-[#494623]">
+                Click to upload or drag and drop
+              </p>
+            </div>
+          </div>
+          <span className="text-xs text-gray-500">
+            Only Accepted format: PDF
+          </span>
+        </fieldset>
+
         <button
           type="submit"
           className="bg-[#494623] hover:bg-[#746f28] text-white px-4 py-2 rounded-full cursor-pointer w-full"
@@ -119,13 +144,6 @@ function Input({ onSubmit }) {
           Submit
         </button>
       </form>
-
-      {/* <img
-        src="https://i.ytimg.com/vi/7Aw7K3f9_Xc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBlZYrLdZ3xTplz342JdC3rW73I3w"
-        alt=""
-        className="w-[50%] h-fill rounded-md"
-      /> */}
-
       <ImageSlider></ImageSlider>
     </section>
   );
