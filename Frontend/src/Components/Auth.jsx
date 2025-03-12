@@ -9,6 +9,8 @@ import {
 } from "firebase/auth";
 import google from "../assets/google.svg";
 
+import toast from "react-hot-toast";
+
 const Auth = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(""); // Handle errors
@@ -30,17 +32,21 @@ const Auth = () => {
       // Sign in user
       const result = await signInWithPopup(auth, googleProvider);
       const email = result.user.email;
+      console.log(result.user);
+      console.log(result.user.photoURL);
 
       if (email.endsWith("@srmap.edu.in")) {
         setUser(result.user);
-        setError(""); // Clear previous errors
+        toast.success("Login Successfully!");
+        setError("");
       } else {
         setError("Access Denied: Only @srmap.edu.in accounts can sign in.");
+        toast.error("Access Denied: Only @srmap.edu.in accounts can sign in");
         await signOut(auth); // Log them out immediately
       }
     } catch (error) {
       setError("Login failed. Please try again.");
-      console.error(error);
+      toast.error("Login failed. Please try again.");
     }
   };
 
@@ -49,8 +55,12 @@ const Auth = () => {
       await signOut(auth);
       setUser(null);
     } catch (error) {
-      console.error(error);
+      toast.success("Logout Successfully");
     }
+  };
+
+  const getAvatarUrl = (name) => {
+    return `https://avatar.iran.liara.run/username?username=${name}`;
   };
 
   return (
@@ -59,7 +69,7 @@ const Auth = () => {
         <div className="text-center flex justify-center items-center gap-4">
           <img
             className="w-12 h-12 rounded-full mx-auto shadow-lg"
-            src={user.photoURL}
+            src={getAvatarUrl(user.displayName)}
             alt="User"
           />
           <h2 className="text-xl font-semibold text-[#494623]">
@@ -67,7 +77,7 @@ const Auth = () => {
           </h2>
           <button
             onClick={handleLogout}
-            className="bg-[#494623] text-white font-bold gap-2 flex justify-center items-center cursor-pointer hover:bg-[#2c2a1a] w-[120px] h-[52px] rounded-full"
+            className="bg-[#494623] text-white font-bold hover:scale-[0.9] transition-all ease-in duration-200 gap-2 flex justify-center items-center cursor-pointer hover:bg-[#2c2a1a] w-fit px-4 h-[52px] rounded-full"
           >
             <img src={google} alt="Google" className="w-6" />
             LogOut
@@ -77,12 +87,11 @@ const Auth = () => {
         <>
           <button
             onClick={handleLogin}
-            className="bg-[#494623] text-white font-bold gap-2 flex justify-center items-center cursor-pointer hover:bg-[#2c2a1a] w-[120px] h-[52px] rounded-full"
+            className="bg-[#494623] hover:scale-[0.9] transition-all ease-in duration-200 text-white font-bold gap-2 flex justify-center items-center cursor-pointer hover:bg-[#2c2a1a] w-fit px-4 h-[52px] rounded-full"
           >
             <img src={google} alt="Google" className="w-6" />
-            Login
+            Login with Google
           </button>
-          {error && <p className="text-red-500 mt-2">{error}</p>} {/* Display error message */}
         </>
       )}
     </>

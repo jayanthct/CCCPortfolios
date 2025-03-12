@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <>
       <nav className="navbar flex justify-between px-[10%] py-[2%] items-center bg-[#49462326]">
-        <img src={logo} alt="" className="image md:w-[200px] w-[100px]" />
+        <a href="/"><img src={logo} alt="" className="image md:w-[200px] w-[100px]" /></a>
         <Auth></Auth>
       </nav>
     </>

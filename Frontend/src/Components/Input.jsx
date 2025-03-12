@@ -1,11 +1,14 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import Axios
+
+import toast from "react-hot-toast";
+import ImageSlider from "./ImageSlider";
 
 function Input({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
     link: "",
-    img: "",
   });
 
   const [error, setError] = useState("");
@@ -16,101 +19,114 @@ function Input({ onSubmit }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, rollno, link } = formData;
+    const { name, rollno, link, img } = formData;
+
     if (!name || !rollno || !link) {
       setError("All fields except Image are mandatory.");
+      toast.error(error);
       setSuccess("");
       return;
     }
+
     setError("");
-    setSuccess("Form submitted successfully!");
-    console.log(formData);
+    setSuccess("");
 
-    // Send formData to parent
-    onSubmit(formData);
+    try {
+      const response = await axios.post("http://localhost:5000/users/add", {
+        name,
+        rollno,
+        portfolio_link: link,
+        image_link: img || "", // Send empty string if no image
+      });
 
-    // Clear form after submission
-    setFormData({
-      name: "",
-      rollno: "",
-      link: "",
-      img: "",
-    });
+      if (response.status === 201) {
+        setSuccess("Portfolio added successfully! ✅");
+        toast.success(success);
+        setFormData({ name: "", rollno: "", link: "", img: "" }); // Clear form
+        onSubmit(response.data); // Send response data to parent
+      }
+    } catch (e) {
+      setError("Failed to submit. ❌ Try again.");
+      toast.error("Failed to submit. ❌ Try again.");
+    }
   };
 
   return (
-    <section className="flex justify-center mt-6 items-center gap-4 md:flex-row flex-col ">
+    <section className="flex justify-center mt-6 items-center gap-8 md:flex-row flex-col">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 justify-between items-start bg-white px-12 py-8 rounded space-x-4 w-fit"
       >
-        <div className="flex w-full flex-col items-start justify-between space-y-1">
-          <label className="text-[#494623] font-bold mb-1">
-            Name:<span className="text-red-500">*</span>
+        <div className="quickchangebuttons flex w-full justify-around items-center gap-2 mt-2 bg-[#4946233b] lg:p-2 p-3 rounded-full mb-4">
+          <div
+            className={`flex gap-4 px-8 cursor-pointer justify-center items-center w-full py-2 rounded-full text-[14px] lg:text-[16px] h-[52px] font-bold bg-[#494623] text-white  hover:scale-[0.9] transition-all ease-in duration-200`}
+          >
+            List Your Portfolio Here
+          </div>
+        </div>
+        <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
+          <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
+            Full Name{" "}
+            <span className="text-[#FF4E59]">*</span>
           </label>
           <input
+            required
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="border w-full border-[#494623] rounded px-2 py-1 focus:outline-none focus:border-[#746f28] hover:border-[#746f28] active:border-[#494623] transition duration-300"
+            placeholder="Enter Full Name"
+            className="w-full h-[52px] mt-1 p-2 pl-4 border-1 border-[#746f2829] rounded-[6px] bg-white cursor-text hover:outline-1 hover:outline-[#746f2862] focus:outline-2 active:border-[#494623]  focus:outline-[#746f28a0] appearance-none"
           />
-        </div>
-
-        <div className="flex w-full flex-col items-start justify-between space-y-1">
-          <label className="text-[#494623] font-bold mb-1">
-            Roll Number:<span className="text-red-500">*</span>
+        </fieldset>
+        <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
+          <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
+            Roll Number{" "}
+            <span className="text-[#FF4E59]">*</span>
           </label>
           <input
+            required
             type="text"
             name="rollno"
             value={formData.rollno}
             onChange={handleChange}
-            className="border w-full border-[#494623] rounded px-2 py-1 focus:outline-none focus:border-[#746f28] hover:border-[#746f28] active:border-[#494623] transition duration-300"
+            placeholder="AP2XXXXXX"
+            className="w-full h-[52px] mt-1 p-2 pl-4 border-1 border-[#746f2829] rounded-[6px] bg-white cursor-text hover:outline-1 hover:outline-[#746f2862] focus:outline-2 active:border-[#494623]  focus:outline-[#746f28a0] appearance-none"
           />
-        </div>
-
-        <div className="flex flex-col w-full items-start justify-between space-y-1">
-          <label className="text-[#494623] font-bold mb-1">
-            Portfolio Link:<span className="text-red-500">*</span>
+        </fieldset>
+        <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
+          <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
+            Portfolio Link{" "}
+            <span className="text-[#FF4E59]">*</span>
           </label>
           <input
+            required
             type="text"
             name="link"
             value={formData.link}
             onChange={handleChange}
-            className="border w-full border-[#494623] rounded px-2 py-1 focus:outline-none focus:border-[#746f28] hover:border-[#746f28] active:border-[#494623] transition duration-300"
+            placeholder="https://myportfolio.com"
+            className="w-full h-[52px] mt-1 p-2 pl-4 border-1 border-[#746f2829] rounded-[6px] bg-white cursor-text hover:outline-1 hover:outline-[#746f2862] focus:outline-2 active:border-[#494623]  focus:outline-[#746f28a0] appearance-none"
           />
-        </div>
-
-        <div className="flex flex-col items-start justify-between space-y-1 w-full">
-          <label className="text-[#494623] font-bold mb-1">
-            Image Link (Optional):
-          </label>
-          <input
-            type="text"
-            name="img"
-            value={formData.img}
-            onChange={handleChange}
-            className="border border-[#494623] rounded px-2 py-1 focus:outline-none w-full focus:border-[#746f28] hover:border-[#746f28] active:border-[#494623] transition duration-300"
-          />
-        </div>
-
+        </fieldset>
+  
         <button
           type="submit"
-          className="bg-[#494623] hover:bg-[#746f28] text-white  px-4 py-2 rounded-full cursor-pointer w-full"
+          className="bg-[#494623] hover:bg-[#746f28] text-white px-4 py-2 rounded-full cursor-pointer w-full"
         >
           Submit
         </button>
-
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
       </form>
 
+      {/* <img
+        src="https://i.ytimg.com/vi/7Aw7K3f9_Xc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBlZYrLdZ3xTplz342JdC3rW73I3w"
+        alt=""
+        className="w-[50%] h-fill rounded-md"
+      /> */}
 
-      <img src="https://i.ytimg.com/vi/7Aw7K3f9_Xc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBlZYrLdZ3xTplz342JdC3rW73I3w" alt="" className="w-[50%] h-fill" />
+      <ImageSlider></ImageSlider>
     </section>
   );
 }
