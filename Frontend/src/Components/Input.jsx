@@ -12,6 +12,8 @@ import { X } from "lucide-react";
 
 import LogoInfinite from "./LogoInfinite";
 
+import { useAuth } from "./AuthContext";
+
 function Input({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -25,6 +27,8 @@ function Input({ onSubmit }) {
 
   const [file, setFile] = useState(null);
 
+  const { isLoggedin, handleLogin } = useAuth();
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "file" && files.length > 0) {
@@ -37,6 +41,12 @@ function Input({ onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isLoggedin) {
+      handleLogin(); // Trigger the login if not logged in
+      return;
+    }
+
     const { name, rollno, link, img } = formData;
 
     if (!name || !rollno || !link) {

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Input from "./Input";
 import ProfileCard from "./ProfileCard";
 import { useAuth } from "./AuthContext";
+import LoginToShow from "./LoginToShow";
 
 const profile = [
   {
@@ -83,9 +84,14 @@ const Main = () => {
         <Input onSubmit={(data) => setProfiles([...profiles, data])} />
       </main>
 
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10">
+      {/* <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10"> */}
         {/* <ProfileCard profile={profile}></ProfileCard> */}
-        {isLoggedin ? <h1>Welcome Back!</h1> : <h1>Please Log In</h1>}
+        {/* {isLoggedin ? <h1>Welcome</h1> : <LoginToShow></LoginToShow>} */}
+      {/* </div> */}
+
+      <div className="w-full">
+        {/* <ProfileCard profile={profile}></ProfileCard> */}
+        {isLoggedin ? <h1>Welcome</h1> : <LoginToShow></LoginToShow>}
       </div>
     </>
   );
