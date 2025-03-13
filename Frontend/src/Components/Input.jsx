@@ -1,49 +1,38 @@
-import React, { useState } from "react";
-import axios from "axios"; // Import Axios
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
-
 import toast from "react-hot-toast";
-import ImageSlider from "./ImageSlider";
-
-import upload from "../assets/upload.svg";
-
 import { X } from "lucide-react";
-
-import LogoInfinite from "./LogoInfinite";
-
+import upload from "../assets/upload.svg";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../auth/firebase";
 import { useAuth } from "./AuthContext";
+
+import ImageSlider from "./ImageSlider";
+import LogoInfinite from "./LogoInfinite";
 
 function Input({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
     link: "",
-    file: "",
+    fileUrl: "",
   });
+  const [file, setFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState("");
 
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { isLoggedin, handleLogin } = useAuth();
 
-  const [file, setFile] = useState(null);
-
-  const { isLoggedin, handleLogin, user } = useAuth();
-
-  const sanitizeInput = (input) => {
-    return DOMPurify.sanitize(input);
-  };
+  const sanitizeInput = (input) => DOMPurify.sanitize(input);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-
     if (name === "file" && files.length > 0) {
-      setFile(files[0]);
-      setFormData((prevData) => ({
-        ...prevData,
-        img: sanitizeInput(files[0].name),
-      }));
+      const selectedFile = files[0];
+      setFile(selectedFile);
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -52,50 +41,76 @@ function Input({ onSubmit }) {
     }
   };
 
+  const uploadFile = async () => {
+    if (!file) return "";
+    const storageRef = ref(storage, `resumes/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => reject(error),
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(downloadURL);
+          setFileUrl(downloadURL);
+        }
+      );
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isLoggedin) {
-      handleLogin(); // Trigger the login if not logged in
+      handleLogin();
       return;
     }
 
-    const { name, rollno, link, img } = formData;
-
+    const { name, rollno, link } = formData;
 
     if (!name || !rollno || !link) {
-      setError("All fields mandatory.");
-      toast.error(error);
-      setSuccess("");
+      setError("All fields are mandatory.");
+      toast.error("All fields are mandatory.");
       return;
     }
 
-    setError("");
-    setSuccess("");
-
     try {
+      const fileUrl = await uploadFile();
       const response = await axios.post("http://localhost:5000/users/add", {
         name,
         rollno,
         portfolio_link: link,
-        image_link: img || "", // Send empty string if no image
+        image_link: fileUrl,
       });
 
       if (response.status === 201) {
-        setSuccess("Portfolio added successfully! ✅");
-        toast.success(success);
-        setFormData({ name: "", rollno: "", link: "", img: "" }); // Clear form
-        onSubmit(response.data); // Send response data to parent
+        toast.success("Portfolio added successfully!");
+        setFormData({ name: "", rollno: "", link: "", fileUrl: "" });
+        setFile(null);
+        onSubmit(response.data);
       }
     } catch (e) {
-      setError("Failed to submit. ❌ Try again.");
-      toast.error("Failed to submit. ❌ Try again.");
+      toast.error("Failed to submit. Please try again.");
     }
   };
 
   const handleRemove = () => {
     setFile(null);
+    setFileUrl("");
   };
+
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+
+      return () => {
+        if (url) URL.revokeObjectURL(url); // Clean up
+      };
+    }
+  }, [file]);
 
   return (
     <section className="flex justify-center w-full mt-6 items-center gap-8 md:flex-row flex-col px-[16px] lg:px-[4%] min-h-fit">
@@ -163,10 +178,11 @@ function Input({ onSubmit }) {
           </label>
           <div className="relative w-full h-[56px] mt-1 p-2 border-2 border-dashed border-[#746f28a0] rounded-[8px] bg-[#f9f9f9] hover:bg-[#f4f4f4] cursor-pointer transition duration-300 ease-in-out">
             <input
-              required
               type="file"
-              accept="application/pdf"
+              name="file"
               onChange={handleChange}
+              accept="application/pdf"
+              required
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
             <div className="flex items-center justify-center h-full gap-2 px-4">
@@ -180,15 +196,15 @@ function Input({ onSubmit }) {
           {file && (
             <div className="flex items-center mt-2 gap-2">
               <a
-                href={URL.createObjectURL(file)}
+                href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
                 {file.name}
               </a>
-              <button onClick={handleRemove} className="text-red-500">
-                <X size={16} />
+              <button onClick={handleRemove} className="text-red-500 cursor-pointer">
+                <X size={20} />
               </button>
             </div>
           )}
