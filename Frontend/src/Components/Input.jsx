@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; // Import Axios
 
 import { motion } from "framer-motion";
+import DOMPurify from "dompurify";
 
 import toast from "react-hot-toast";
 import ImageSlider from "./ImageSlider";
@@ -27,15 +28,27 @@ function Input({ onSubmit }) {
 
   const [file, setFile] = useState(null);
 
-  const { isLoggedin, handleLogin } = useAuth();
+  const { isLoggedin, handleLogin, user } = useAuth();
+
+  const sanitizeInput = (input) => {
+    return DOMPurify.sanitize(input);
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+
     if (name === "file" && files.length > 0) {
       setFile(files[0]);
-      setFormData({ ...formData, img: files[0].name });
+      setFormData((prevData) => ({
+        ...prevData,
+        img: sanitizeInput(files[0].name),
+      }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: sanitizeInput(value),
+      }));
     }
   };
 
@@ -48,6 +61,7 @@ function Input({ onSubmit }) {
     }
 
     const { name, rollno, link, img } = formData;
+
 
     if (!name || !rollno || !link) {
       setError("All fields mandatory.");
@@ -121,6 +135,7 @@ function Input({ onSubmit }) {
             required
             type="text"
             name="rollno"
+            pattern="^AP\d{11}$"
             value={formData.rollno}
             onChange={handleChange}
             placeholder="AP2XXXXXX"

@@ -15,9 +15,9 @@ import { useAuth } from "./AuthContext";
 const Auth = () => {
 
 
-  const {setLoggedin,handleLogin} = useAuth();
+  const {setLoggedin,handleLogin,setUser, user} = useAuth();
   
-  const [user, setUser] = useState(null);
+
   const [error, setError] = useState(""); // Handle errors
 
   useEffect(() => {

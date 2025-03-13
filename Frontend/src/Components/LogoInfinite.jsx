@@ -37,13 +37,13 @@ const LogoInfinite = () => {
   }, []);
 
   return (
-    <article className="slider w-full bg-white rounded-[8px] p-6 mt-4 mb-4 h-fit">
+    <article className="slider overflow-clip w-full bg-white rounded-[8px] py-4 px-2 mt-4 mb-4 h-fit">
       <Slider
         width={sliderWidth}
         duration={20}
         pauseOnHover={true}
-        // blurBorders={true}
-        // blurBorderColor="#FFFFFF"
+        blurBorders={true}
+        blurBorderColor="#FFFFFF"
       >
         {logoImages.map((logo, index) => (
           <Slider.Slide key={index}>
