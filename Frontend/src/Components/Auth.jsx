@@ -10,14 +10,20 @@ import {
 import google from "../assets/google.svg";
 
 import toast from "react-hot-toast";
+import { useAuth } from "./AuthContext";
 
 const Auth = () => {
+  const {setLoggedin} = useAuth();
+  
   const [user, setUser] = useState(null);
   const [error, setError] = useState(""); // Handle errors
 
   useEffect(() => {
     // Check if user is already logged in (persists across refresh)
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if(currentUser){
+        setLoggedin(true);
+      }
       setUser(currentUser);
     });
 
@@ -37,12 +43,14 @@ const Auth = () => {
 
       if (email.endsWith("@srmap.edu.in")) {
         setUser(result.user);
+        setLoggedin(true);
         toast.success("Login Successfully!");
         setError("");
       } else {
         setError("Access Denied: Only @srmap.edu.in accounts can sign in.");
         toast.error("Access Denied: Only @srmap.edu.in accounts can sign in");
         await signOut(auth); // Log them out immediately
+        setLoggedin(false);
       }
     } catch (error) {
       setError("Login failed. Please try again.");
@@ -56,6 +64,7 @@ const Auth = () => {
       setUser(null);
     } catch (error) {
       toast.success("Logout Successfully");
+      setLoggedin(false);
     }
   };
 

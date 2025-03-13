@@ -24,7 +24,7 @@ const ImageSlider = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center gap-4 w-[60%]">
+      <div className="flex flex-col justify-center items-center gap-4 w-full">
         <p className="quote italic text-[18px] text-center w-[48ch] font-semibold text-[#494623]">"A portfolio speaks louder than words—it's the proof that your skills are more than just claims, they're reality"</p>
         <div className="w-full overflow-hidden ">
           <motion.img

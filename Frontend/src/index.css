@@ -1,2 +1,7 @@
 @import "tailwindcss";
 
+body{
+    width: 100%;
+    height: screen;
+    overflow-x: hidden;
+}

@@ -1,25 +1,38 @@
 import React, { useState } from "react";
 import axios from "axios"; // Import Axios
 
+import { motion } from "framer-motion";
+
 import toast from "react-hot-toast";
 import ImageSlider from "./ImageSlider";
 
 import upload from "../assets/upload.svg";
+
+import { X } from "lucide-react";
+
+import LogoInfinite from "./LogoInfinite";
 
 function Input({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
     link: "",
-    file:""
+    file: "",
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [file, setFile] = useState(null);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    if (name === "file" && files.length > 0) {
+      setFile(files[0]);
+      setFormData({ ...formData, img: files[0].name });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -56,11 +69,18 @@ function Input({ onSubmit }) {
     }
   };
 
+  const handleRemove = () => {
+    setFile(null);
+  };
+
   return (
-    <section className="flex justify-center mt-6 items-center gap-8 md:flex-row flex-col">
-      <form
+    <section className="flex justify-center w-full mt-6 items-center gap-8 md:flex-row flex-col px-[16px] lg:px-[4%] min-h-fit">
+      <motion.form
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
         onSubmit={handleSubmit}
-        className="flex flex-col gap-6 justify-between items-start bg-white px-12 py-8 rounded space-x-4 w-fit"
+        className="flex flex-col gap-6 justify-between items-start bg-white px-12 py-8 rounded space-x-4 w-full"
       >
         <div className="quickchangebuttons flex w-full justify-around items-center gap-2 mt-2 bg-[#4946233b] lg:p-2 p-3 rounded-full mb-4">
           <div
@@ -120,18 +140,34 @@ function Input({ onSubmit }) {
             <input
               required
               type="file"
-              name="link"
-              value={formData.file}
+              accept="application/pdf"
               onChange={handleChange}
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
             <div className="flex items-center justify-center h-full gap-2 px-4">
               <img src={upload} alt="" className="upload w-4 h-4" />
               <p className="text-sm text-[#494623]">
-                Click to upload or drag and drop
+                {file ? file.name : "Click to upload or drag and drop"}
               </p>
             </div>
           </div>
+
+          {file && (
+            <div className="flex items-center mt-2 gap-2">
+              <a
+                href={URL.createObjectURL(file)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {file.name}
+              </a>
+              <button onClick={handleRemove} className="text-red-500">
+                <X size={16} />
+              </button>
+            </div>
+          )}
+
           <span className="text-xs text-gray-500">
             Only Accepted format: PDF
           </span>
@@ -143,8 +179,17 @@ function Input({ onSubmit }) {
         >
           Submit
         </button>
-      </form>
-      <ImageSlider></ImageSlider>
+      </motion.form>
+
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="imageshowcase flex flex-col justify-between items-center md:w-[50%] w-full"
+      >
+        <ImageSlider></ImageSlider>
+        <LogoInfinite></LogoInfinite>
+      </motion.div>
     </section>
   );
 }
