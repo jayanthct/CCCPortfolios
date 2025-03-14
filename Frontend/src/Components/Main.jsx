@@ -1,67 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 import Input from "./Input";
 import ProfileCard from "./ProfileCard";
 import { useAuth } from "./AuthContext";
 import LoginToShow from "./LoginToShow";
-
-const profile = [
-  {
-    name: "Samaira",
-    rollno: "AP2211006999",
-    link: "https://www.youtube.com/shorts/aYQ9YZpPH4k",
-    img: "https://d.rapidcdn.app/snapinst?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJodHRwczovL3Njb250ZW50LW11YzItMS5jZG5pbnN0YWdyYW0uY29tL3YvdDUxLjI4ODUtMTUvNDc0OTgwMDIzXzE3ODU4MjQ0OTM2MzU0NjIxXzgwMzQwNzQxNDc4OTIxOTM3ODlfbi53ZWJwP3N0cD1kc3Qtd2VicF9wNjQweDY0MF9zaDAuMDgmZWZnPWV5SjJaVzVqYjJSbFgzUmhaeUk2SW1sdFlXZGxYM1Z5YkdkbGJpNHhORFF3ZURFNE1EQXVjMlJ5TG1ZM05UYzJNUzVrWldaaGRXeDBYMmx0WVdkbEluMCZfbmNfaHQ9c2NvbnRlbnQtbXVjMi0xLmNkbmluc3RhZ3JhbS5jb20mX25jX2NhdD0xMDkmX25jX29jPVE2Y1oyQUU4NTE4N0tEZ0t5eDA4WkVZQnZSaGg4S3RRbVNpNkFjR2RnVmNZc0NWdkVhMklockJSNmphOFpEaW1hOVduM3hzJl9uY19vaGM9dlkxNllzdmxJSThRN2tOdmdFS1U0VFcmX25jX2dpZD0zNjdhMzNiNjU0N2Q0ZGZhOTRlNDhlYmJmNTYxMGE5MiZlZG09QVBzMTdDVUJBQUFBJmNjYj03LTUmb2g9MDBfQVlDRW8zZnBUb01qNkFKSXZYTWRFQTRhQVFkWTVKUEV6YTEwVFJqQVFpNFlGUSZvZT02N0M0QTM0MyZfbmNfc2lkPTEwZDEzYiIsImZpbGVuYW1lIjoiU25hcGluc3QuYXBwX3RodW1iXzQ3NDk4MDAyM18xNzg1ODI0NDkzNjM1NDYyMV84MDM0MDc0MTQ3ODkyMTkzNzg5X24ud2VicCJ9.IwfJtQUV4S81fOjkj36bdvjZjmJp6OcsmkId0wje1Ms",
-  },
-  {
-    name: "Nithish Sri Ram",
-    rollno: "AP22110010837",
-    link: "https://nithish-sri-ram.github.io/My-Portfolio/",
-  },
-  {
-    name: "A R Gopikrishna",
-    rollno: "AP22110010118",
-    link: "https://argopikrishna.github.io/Portfolio/",
-    img: "https://argopikrishna.github.io/Portfolio/files/DP.jpg",
-  },
-  {
-    name: "Akhilesh Chennadi",
-    rollno: "AP22110010721",
-    link: "https://akhileshchennadiportfolio.netlify.app/",
-  },
-  {
-    name: "Thotakura Hemanjali",
-    rollno: "AP22110010047",
-    link: "https://hemanjaliportfolio.netlify.app/",
-  },
-  {
-    name: "JayanthCT",
-    rollno: "AP22110011147",
-    link: "https://jayanthct.framer.website",
-    img: "https://framerusercontent.com/images/2QMCgXhJKxQZ5kGqOq44aUEU20.png",
-  },
-  {
-    name: "Sriya Balanagu",
-    rollno: "AP22110010539",
-    link: "https://sriyaportfolio.netlify.app/",
-    img: "https://sriyaportfolio.netlify.app/assets/img/pro.jpg",
-  },
-  {
-    name: "Rohan Praneeth Kammula",
-    rollno: "AP22110011137",
-    link: "https://portfoliobyrohan.netlify.app/",
-  },
-  {
-    name: "Yashwanth Sudikonda",
-    rollno: "AP22110011149",
-    link: "https://portfoliobyyashwanth.netlify.app/",
-    img: "https://portfoliobyyashwanth.netlify.app/assets/img/dp.jpg",
-  },
-];
+import toast from "react-hot-toast";
 
 const Main = () => {
   const { isLoggedin } = useAuth();
-  const [profiles, setProfiles] = useState(profile);
+  const [profiles, setProfiles] = useState([]);
+
+  useEffect(() => {
+    // Fetch profiles only if logged in
+    if (isLoggedin) {
+      axios
+        .get("http://localhost:5000/see") // Add the full URL to avoid issues
+        .then((response) => {
+          console.log("Profile data:", response.data); // Log the data
+          if (Array.isArray(response.data)) {
+            setProfiles(response.data); // Ensure the data is an array
+          } else {
+            console.error("Unexpected data format:", response.data);
+            setProfiles([]); // Set to an empty array to prevent errors
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching profiles:", error);
+          toast.error("Error in Fetching Data!");
+        });
+    }
+  }, [isLoggedin,profiles]);
 
   return (
     <>
@@ -81,17 +51,19 @@ const Main = () => {
             Portfolios
           </motion.div>
         </h1>
-        <Input onSubmit={(data) => setProfiles([...profiles, data])} />
+        <Input set={setProfiles} />
       </main>
 
-      {/* <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10"> */}
-        {/* <ProfileCard profile={profile}></ProfileCard> */}
-        {/* {isLoggedin ? <h1>Welcome</h1> : <LoginToShow></LoginToShow>} */}
-      {/* </div> */}
-
-      <div className="w-full">
-        {/* <ProfileCard profile={profile}></ProfileCard> */}
-        {isLoggedin ? <h1>Welcome</h1> : <LoginToShow></LoginToShow>}
+      <div className="w-full px-[2%] py-[2%] bg-[#f7f5e9]">
+        {isLoggedin ? (
+          <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {profiles.map((profile, index) => (
+              <ProfileCard key={index} profile={profile} set={setProfiles}/>
+            ))}
+          </div>
+        ) : (
+          <LoginToShow />
+        )}
       </div>
     </>
   );

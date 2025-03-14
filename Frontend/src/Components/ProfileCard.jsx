@@ -2,35 +2,59 @@ import React from "react";
 
 import resumeicon from "../assets/resumeicon.svg";
 import globe from "../assets/global.svg";
-import { FaTrash, FaPen } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import toast from "react-hot-toast";
+import axios from "axios";
 
-import { motion } from "framer-motion";
-
+import { useAuth } from "./AuthContext";
 
 // Function to get avatar or fallback
-const getAvatarUrl = (name, profile) => {
-    return profile.img
-      ? profile.img
-      : `https://avatar.iran.liara.run/username?username=${name}`;
-  };
-  
-  // Function to handle profile deletion
-  const handleDelete = (rollno) => {
-    const updatedProfiles = profiles.filter((item) => item.rollno !== rollno);
-    setProfiles(updatedProfiles);
-  };
-  
+const getAvatarUrl = (name) => {
+  return `https://avatar.iran.liara.run/username?username=${name}`;
+};
 
-function ProfileCard({profile}) {
-    console.log(profile);
+const handleDisabledButton = (name, rollno) => {
+  const displayName = name;
+  const match = displayName.match(/AP(\d{11})/);
+  const isMatch = match && match[0] == rollno;
+
+  return isMatch;
+};
+
+// Function to handle profile deletion
+const handleDelete = async (rollno, name) => {
+  const displayName = name;
+  const match = displayName.match(/AP(\d{11})/);
+  if (match[0] == rollno) {
+    try {
+      const response = await axios.delete("http://localhost:5000/deleteuser", {
+        data: { rollno }, // Send the rollno in the request body
+      });
+
+      if (response.status === 200) {
+        toast.success("User deleted successfully!");
+        // Update the state after deletion
+        setProfiles((prevProfiles) =>
+          prevProfiles.filter((profile) => profile.rollno !== rollno)
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user. Please try again.");
+    }
+  } else {
+    toast.error("You Don't Have Access to Delete Other User");
+  }
+};
+
+function ProfileCard({ profile, set }) {
+  const { user } = useAuth();
   return (
     <>
-      <motion.a
-        key={profile[4].rollno}
-        // href={profile.link}
+      <article
+        key={profile.rollno}
         target="_blank"
-        className="card relative flex flex-col justify-center items-center gap-3 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow"
-        // whileHover={{ scale: 1.05 }}
+        className="card relative flex flex-col justify-center items-center gap-3 bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all border-1 border-[#67600f26]"
       >
         <div className="votebox flex justify-center items-center gap-4">
           <p className="text font-semibold">Total Votes : </p>
@@ -40,28 +64,34 @@ function ProfileCard({profile}) {
         </div>
 
         <img
-          src={getAvatarUrl(profile[4].name, profile)}
+          src={getAvatarUrl(profile.name)}
           alt="avatar"
           className="w-24 h-24 rounded-full object-cover"
         />
 
-        <p className="text-[#494623] text-lg font-semibold">{profile[4].name}</p>
-        <p className="text-[#746f28] text-sm font-medium">{profile[4].rollno}</p>
+        <p className="text-[#494623] text-lg font-semibold">{profile.name}</p>
+        <p className="text-[#746f28] text-sm font-medium">{profile.rollno}</p>
 
-        <div
-          className="absolute hover:scale-[0.9] duration-100 ease-in  top-4 right-4 bg-red-200 bg-opacity-40 rounded-full p-4 cursor-pointer hover:bg-opacity-60 transition"
-          onClick={() => handleDelete(profile[4].rollno)}
+        <button
+          type="button"
+          className={`absolute hover:scale-[0.9] duration-100 ease-in top-4 right-4 rounded-full p-4 transition ${
+            handleDisabledButton(user.displayName, profile.rollno)
+              ? "bg-red-200 bg-opacity-40 hover:bg-opacity-60 cursor-pointer"
+              : "bg-gray-300 cursor-not-allowed"
+          }`}
+          onClick={() => handleDelete(profile.rollno, user.displayName)}
+          disabled={!handleDisabledButton(user.displayName, profile.rollno)}
         >
-          <FaTrash className="text-red-600" />
-        </div>
-        <div
-          className="absolute hover:scale-[0.9] duration-100 ease-in  right-4 top-18 bg-blue-200 bg-opacity-40 rounded-full p-4 cursor-pointer hover:bg-opacity-60 transition"
-          onClick={() => handleDelete(profile[4].rollno)}
-        >
-          <FaPen className="text-blue-600" />
-        </div>
+          <FaTrash
+            className={
+              handleDisabledButton(user.displayName, profile.rollno)
+                ? "text-red-600"
+                : "text-gray-600 opacity-50"
+            }
+          />
+        </button>
 
-        <div className="buttons flex justify-between items-center w-full m-2">
+        <div className="buttons flex justify-center gap-2 items-center w-full m-2">
           <button
             className="resume hover:scale-[0.9] transition-all duration-100 ease-in flex justify-center items-center  gap-2 px-6 py-2 bg-[#49462311] text-[#494623] rounded-full font-bold"
             href="#"
@@ -70,20 +100,23 @@ function ProfileCard({profile}) {
             <img src={resumeicon} alt="" className="icon w-6 h-6" />
             Resume
           </button>
-          <button
-            className="resume hover:scale-[0.9] transition-all duration-100 ease-in flex justify-center  items-center gap-2 px-6 py-2 bg-[#4692DD22] text-[#4692DD] rounded-full font-bold"
-            href="#"
-          >
-            {" "}
-            <img src={globe} alt="" className="icon w-6 h-6" />
-            Visit Site
+          <button>
+            <a
+              className="site hover:scale-[0.9] transition-all duration-100 ease-in flex justify-center  items-center gap-2 px-6 py-2 bg-[#4692DD22] text-[#4692DD] rounded-full font-bold"
+              href={profile.portfolio_link}
+              target="_blank"
+            >
+              {" "}
+              <img src={globe} alt="" className="icon w-6 h-6" />
+              Visit Site
+            </a>
           </button>
         </div>
 
         <button className="vote w-full hover:scale-[0.9] transition-all duration-100 ease-in  rounded-full px-6 py-2 bg-green-600 text-white font-semibold cursor-pointer">
           Up Vote
         </button>
-      </motion.a>
+      </article>
     </>
   );
 }

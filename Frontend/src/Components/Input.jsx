@@ -12,7 +12,7 @@ import { useAuth } from "./AuthContext";
 import ImageSlider from "./ImageSlider";
 import LogoInfinite from "./LogoInfinite";
 
-function Input({ onSubmit }) {
+function Input() {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
@@ -33,6 +33,7 @@ function Input({ onSubmit }) {
     if (name === "file" && files.length > 0) {
       const selectedFile = files[0];
       setFile(selectedFile);
+      toast.success("File Uploaded Successfully!");
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -77,21 +78,24 @@ function Input({ onSubmit }) {
     }
 
     try {
-      const fileUrl = await uploadFile();
-      const response = await axios.post("http://localhost:5000/users/add", {
+      // const fileUrl = await uploadFile();
+      const response = await axios.post("http://localhost:5000/addUser", {
         name,
         rollno,
         portfolio_link: link,
-        image_link: fileUrl,
+        // image_link: fileUrl,
       });
 
       if (response.status === 201) {
         toast.success("Portfolio added successfully!");
+        set((prevProfiles) => [...prevProfiles, newProfile]);
         setFormData({ name: "", rollno: "", link: "", fileUrl: "" });
         setFile(null);
-        onSubmit(response.data);
       }
     } catch (e) {
+      if(e.response.status === 400){
+        toast.error("User already exists with this roll number.");
+      }
       toast.error("Failed to submit. Please try again.");
     }
   };
@@ -194,16 +198,19 @@ function Input({ onSubmit }) {
           </div>
 
           {file && (
-            <div className="flex items-center mt-2 gap-2">
+            <div className="flex items-center mt-2 gap-2 px-6 py-2 rounded-full bg-blue-100">
               <a
                 href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline font-semibold"
               >
                 {file.name}
               </a>
-              <button onClick={handleRemove} className="text-red-500 cursor-pointer">
+              <button
+                onClick={handleRemove}
+                className="text-red-500 cursor-pointer"
+              >
                 <X size={20} />
               </button>
             </div>
