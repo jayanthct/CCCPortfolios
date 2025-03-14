@@ -22,7 +22,7 @@ const handleDisabledButton = (name, rollno) => {
 };
 
 // Function to handle profile deletion
-const handleDelete = async (rollno, name) => {
+const handleDelete = async (rollno, name, set) => {
   const displayName = name;
   const match = displayName.match(/AP(\d{11})/);
   if (match[0] == rollno) {
@@ -34,7 +34,7 @@ const handleDelete = async (rollno, name) => {
       if (response.status === 200) {
         toast.success("User deleted successfully!");
         // Update the state after deletion
-        setProfiles((prevProfiles) =>
+        set((prevProfiles) =>
           prevProfiles.filter((profile) => profile.rollno !== rollno)
         );
       }
@@ -79,7 +79,7 @@ function ProfileCard({ profile, set }) {
               ? "bg-red-200 bg-opacity-40 hover:bg-opacity-60 cursor-pointer"
               : "bg-gray-300 cursor-not-allowed"
           }`}
-          onClick={() => handleDelete(profile.rollno, user.displayName)}
+          onClick={() => handleDelete(profile.rollno, user.displayName, set)}
           disabled={!handleDisabledButton(user.displayName, profile.rollno)}
         >
           <FaTrash

@@ -12,7 +12,7 @@ import { useAuth } from "./AuthContext";
 import ImageSlider from "./ImageSlider";
 import LogoInfinite from "./LogoInfinite";
 
-function Input() {
+function Input({ set }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
@@ -23,7 +23,7 @@ function Input() {
   const [fileUrl, setFileUrl] = useState("");
 
   const [error, setError] = useState("");
-  const { isLoggedin, handleLogin } = useAuth();
+  const { isLoggedin, handleLogin, user } = useAuth();
 
   const sanitizeInput = (input) => DOMPurify.sanitize(input);
 
@@ -71,6 +71,16 @@ function Input() {
 
     const { name, rollno, link } = formData;
 
+    const displayName = user.displayName;
+    console.log(displayName);
+    const match = displayName.match(/AP(\d{11})/);
+    console.log(match[0]);
+
+    if (match[0] != rollno) {
+      toast.error("You Cannot Add Other Profiles");
+      return;
+    }
+
     if (!name || !rollno || !link) {
       setError("All fields are mandatory.");
       toast.error("All fields are mandatory.");
@@ -86,17 +96,24 @@ function Input() {
         // image_link: fileUrl,
       });
 
+      const newProfile = {
+        name,
+        rollno,
+        portfolio_link: link,
+      };
+
       if (response.status === 201) {
         toast.success("Portfolio added successfully!");
-        set((prevProfiles) => [...prevProfiles, newProfile]);
+        set((prevProfiles) => [newProfile, ...prevProfiles]);
         setFormData({ name: "", rollno: "", link: "", fileUrl: "" });
         setFile(null);
       }
     } catch (e) {
-      if(e.response.status === 400){
+      if (e.response.status === 400) {
         toast.error("User already exists with this roll number.");
+      } else {
+        toast.error("Failed to submit. Please try again.");
       }
-      toast.error("Failed to submit. Please try again.");
     }
   };
 

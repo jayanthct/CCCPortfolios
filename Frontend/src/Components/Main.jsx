@@ -18,7 +18,6 @@ const Main = () => {
       axios
         .get("http://localhost:5000/see") // Add the full URL to avoid issues
         .then((response) => {
-          console.log("Profile data:", response.data); // Log the data
           if (Array.isArray(response.data)) {
             setProfiles(response.data); // Ensure the data is an array
           } else {
@@ -31,7 +30,7 @@ const Main = () => {
           toast.error("Error in Fetching Data!");
         });
     }
-  }, [isLoggedin,profiles]);
+  }, [isLoggedin]);
 
   return (
     <>

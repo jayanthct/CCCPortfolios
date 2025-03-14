@@ -92,7 +92,6 @@ app.get("/see", (req, res) => {
       console.error("Error fetching data from the database:", err);
       return res.status(500).json({ error: "Failed to retrieve users" });
     } else {
-      console.log("Result from DB:", result);
       res.status(200).json(result);
     }
   });
