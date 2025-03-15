@@ -12,7 +12,6 @@ const Main = () => {
   const { isLoggedin } = useAuth();
   const [profiles, setProfiles] = useState([]);
 
-
   useEffect(() => {
     if (isLoggedin) {
       axios
@@ -53,13 +52,41 @@ const Main = () => {
         <Input set={setProfiles} />
       </main>
 
-      <div className="w-full px-[2%] py-[2%] bg-[#f7f5e9]">
+      <div className="w-full px-[2%] py-[2%] bg-[#f7f5e9] flex flex-col justify-center items-center">
         {isLoggedin ? (
-          <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {profiles.map((profile, index) => (
-              <ProfileCard key={index} profile={profile} set={setProfiles} />
-            ))}
-          </div>
+          <>
+            {/* Top 5 Profiles with Highest Votes */}
+            <p className="textheading mb-4 font-bold text-[24px] text-[#494623] self-start">
+              Top 3 Profiles:⭐
+            </p>
+            <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+              {profiles
+                .slice() // Create a copy to avoid mutating the original array
+                .sort((a, b) => b.votes - a.votes) // Sort by votes in descending order
+                .slice(0, 3) // Get the top 5 profiles
+                .map((profile, index) => (
+                  <ProfileCard
+                    key={`top-${index}`}
+                    profile={profile}
+                    set={setProfiles}
+                  />
+                ))}
+            </div>
+
+            {/* Recently Added Profiles */}
+            <p className="textheading mb-4 font-bold text-[24px] text-[#494623] self-start">
+              Recently Added:
+            </p>
+            <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {profiles.map((profile, index) => (
+                <ProfileCard
+                  key={`recent-${index}`}
+                  profile={profile}
+                  set={setProfiles}
+                />
+              ))}
+            </div>
+          </>
         ) : (
           <LoginToShow />
         )}

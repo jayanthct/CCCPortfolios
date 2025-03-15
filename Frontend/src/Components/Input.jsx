@@ -11,12 +11,14 @@ import { useAuth } from "./AuthContext";
 
 import ImageSlider from "./ImageSlider";
 import LogoInfinite from "./LogoInfinite";
+import Dropdown from "./Dropdown";
 
 function Input({ set }) {
   const [formData, setFormData] = useState({
     name: "",
     rollno: "",
     link: "",
+    specs:"",
     fileUrl: "",
   });
   const [file, setFile] = useState(null);
@@ -178,6 +180,7 @@ function Input({ set }) {
             className="w-full h-[52px] mt-1 p-2 pl-4 border-1 border-[#746f2829] rounded-[6px] bg-white cursor-text hover:outline-1 hover:outline-[#746f2862] focus:outline-2 active:border-[#494623]  focus:outline-[#746f28a0] appearance-none"
           />
         </fieldset>
+        <Dropdown formData={formData} setFormData={setFormData}></Dropdown>
         <fieldset className="flex w-full flex-col items-start justify-between space-y-1">
           <label className="block text-sm font-bold text-[#494623] md:text-[16px] text-[14px]">
             Portfolio Link <span className="text-[#FF4E59]">*</span>
