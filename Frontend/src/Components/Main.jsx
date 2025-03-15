@@ -12,17 +12,17 @@ const Main = () => {
   const { isLoggedin } = useAuth();
   const [profiles, setProfiles] = useState([]);
 
+
   useEffect(() => {
-    // Fetch profiles only if logged in
     if (isLoggedin) {
       axios
-        .get("http://localhost:5000/see") // Add the full URL to avoid issues
+        .get("http://localhost:5000/see")
         .then((response) => {
           if (Array.isArray(response.data)) {
-            setProfiles(response.data); // Ensure the data is an array
+            setProfiles(response.data);
           } else {
             console.error("Unexpected data format:", response.data);
-            setProfiles([]); // Set to an empty array to prevent errors
+            setProfiles([]);
           }
         })
         .catch((error) => {
@@ -57,7 +57,7 @@ const Main = () => {
         {isLoggedin ? (
           <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {profiles.map((profile, index) => (
-              <ProfileCard key={index} profile={profile} set={setProfiles}/>
+              <ProfileCard key={index} profile={profile} set={setProfiles} />
             ))}
           </div>
         ) : (

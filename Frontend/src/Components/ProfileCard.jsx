@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 
 import resumeicon from "../assets/resumeicon.svg";
 import globe from "../assets/global.svg";
@@ -14,11 +14,38 @@ const getAvatarUrl = (name) => {
 };
 
 const handleDisabledButton = (name, rollno) => {
-  const displayName = name;
+  const displayName = name || "";
   const match = displayName.match(/AP(\d{11})/);
   const isMatch = match && match[0] == rollno;
 
   return isMatch;
+};
+
+const upVote = (name, rollno, setVotes) => {
+  if (!handleDisabledButton(name, rollno)) {
+    const displayName = name || "";
+    const match = displayName.match(/AP(\d{11})/);
+    handleUpvote(match[0], rollno, setVotes);
+  } else {
+    toast.error("You Cant Vote to Yourself");
+  }
+};
+
+//voting
+const handleUpvote = async (rollno, voteto) => {
+  try {
+    const response = await axios.put("http://localhost:5000/upvote", {
+      rollno,
+      voterId: voteto,
+    });
+
+    if (response.status === 200) {
+      toast.success("Vote increased successfully!");
+    }
+  } catch (error) {
+    console.error("Error upvoting:", error);
+    toast.error(error.response?.data?.error || "Failed to upvote.");
+  }
 };
 
 // Function to handle profile deletion
@@ -47,7 +74,7 @@ const handleDelete = async (rollno, name, set) => {
   }
 };
 
-function ProfileCard({ profile, set }) {
+function ProfileCard({ profile, set}) {
   const { user } = useAuth();
   return (
     <>
@@ -59,7 +86,7 @@ function ProfileCard({ profile, set }) {
         <div className="votebox flex justify-center items-center gap-4">
           <p className="text font-semibold">Total Votes : </p>
           <div className="votecount bg-[#49462338] text-[#494623] text-[18px] w-10 h-10 rounded-full font-bold flex justify-center items-center">
-            5
+            {profile.votes}
           </div>
         </div>
 
@@ -113,7 +140,10 @@ function ProfileCard({ profile, set }) {
           </button>
         </div>
 
-        <button className="vote w-full hover:scale-[0.9] transition-all duration-100 ease-in  rounded-full px-6 py-2 bg-green-600 text-white font-semibold cursor-pointer">
+        <button
+          className="vote w-full hover:scale-[0.9] transition-all duration-100 ease-in  rounded-full px-6 py-2 bg-green-600 text-white font-semibold cursor-pointer"
+          onClick={() => upVote(user.displayName, profile.rollno)}
+        >
           Up Vote
         </button>
       </article>
