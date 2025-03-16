@@ -98,6 +98,7 @@ function ProfileCard({ profile, set}) {
 
         <p className="text-[#494623] text-lg font-semibold">{profile.name}</p>
         <p className="text-[#746f28] text-sm font-medium">{profile.rollno}</p>
+        <p className="text-[#5c3204bd] text-sm font-medium">{profile.specs}</p>
 
         <button
           type="button"

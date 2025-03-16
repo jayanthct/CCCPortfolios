@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 
 // Add User Route
 app.post("/addUser", (req, res) => {
-  const { name, rollno, portfolio_link } = req.body;
+  const { name, rollno, portfolio_link, specs } = req.body;
 
   // Check if the roll number already exists
   db.query(
@@ -38,8 +38,8 @@ app.post("/addUser", (req, res) => {
 
       // Insert the new user
       db.query(
-        "INSERT INTO userCard (name, rollno, portfolio_link) VALUES (?, ?, ?)",
-        [name, rollno, portfolio_link],
+        "INSERT INTO userCard (name, rollno, portfolio_link,specs) VALUES (?, ?, ?, ?)",
+        [name, rollno, portfolio_link, specs],
         (err, result) => {
           if (err) {
             console.error("Error inserting user into the database:", err);
@@ -64,6 +64,7 @@ app.delete("/deleteuser", (req, res) => {
     res.status(200).json({ message: "User deleted successfully!" });
   });
 });
+
 app.put("/upvote", (req, res) => {
   const { rollno, voterId } = req.body;
 

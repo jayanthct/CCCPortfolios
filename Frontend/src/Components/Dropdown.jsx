@@ -65,7 +65,7 @@ const Dropdown = ({ formData, setFormData }) => {
       ...prev,
       specs: selectedOption?.value || "",
     }));
-  };
+  }
 
   return (
     <div className="w-full">
@@ -80,7 +80,7 @@ const Dropdown = ({ formData, setFormData }) => {
         options={specs}
         placeholder="Select Specialization"
         value={specs.find(
-          (option) => option.value === formData["Specilization"]
+          (option) => option.value === formData["specs"]
         )}
         onChange={handleChange}
         getOptionLabel={(e) => (

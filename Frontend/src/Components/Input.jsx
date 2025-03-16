@@ -18,7 +18,7 @@ function Input({ set }) {
     name: "",
     rollno: "",
     link: "",
-    specs:"",
+    specs: "",
     fileUrl: "",
   });
   const [file, setFile] = useState(null);
@@ -71,7 +71,9 @@ function Input({ set }) {
       return;
     }
 
-    const { name, rollno, link } = formData;
+    const { name, rollno, link, specs } = formData;
+
+    console.log(formData);
 
     const displayName = user.displayName;
     console.log(displayName);
@@ -83,7 +85,7 @@ function Input({ set }) {
       return;
     }
 
-    if (!name || !rollno || !link) {
+    if (!name || !rollno || !link || !specs) {
       setError("All fields are mandatory.");
       toast.error("All fields are mandatory.");
       return;
@@ -95,6 +97,7 @@ function Input({ set }) {
         name,
         rollno,
         portfolio_link: link,
+        specs: specs,
         // image_link: fileUrl,
       });
 
