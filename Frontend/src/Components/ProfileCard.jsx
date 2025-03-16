@@ -8,6 +8,17 @@ import axios from "axios";
 
 import { useAuth } from "./AuthContext";
 
+const useMounted = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  return isMounted;
+};
+
 // Function to get avatar or fallback
 const getAvatarUrl = (name) => {
   return `https://avatar.iran.liara.run/username?username=${name}`;
@@ -20,19 +31,19 @@ const handleDisabledButton = (name, rollno) => {
 
   return isMatch;
 };
-
-const upVote = (name, rollno, setVotes) => {
+// Upvote function
+const upVote = (name, rollno, set, setVotes) => {
   if (!handleDisabledButton(name, rollno)) {
     const displayName = name || "";
     const match = displayName.match(/AP(\d{11})/);
-    handleUpvote(match[0], rollno, setVotes);
+    handleUpvote(match[0], rollno, set, setVotes);
   } else {
-    toast.error("You Cant Vote to Yourself");
+    toast.error("You Can't Vote for Yourself");
   }
 };
 
-//voting
-const handleUpvote = async (rollno, voteto) => {
+// Voting handler
+const handleUpvote = async (rollno, voteto, set, setVotes) => {
   try {
     const response = await axios.put("http://localhost:5000/upvote", {
       rollno,
@@ -41,6 +52,15 @@ const handleUpvote = async (rollno, voteto) => {
 
     if (response.status === 200) {
       toast.success("Vote increased successfully!");
+      // Update the votes count on the frontend
+      set((prevProfiles) =>
+        prevProfiles.map((profile) =>
+          profile.rollno === voteto
+            ? { ...profile, votes: profile.votes + 1 }
+            : profile
+        )
+      );
+      setVotes((prevVotes) => prevVotes + 1);
     }
   } catch (error) {
     console.error("Error upvoting:", error);
@@ -48,6 +68,7 @@ const handleUpvote = async (rollno, voteto) => {
   }
 };
 
+// Function to handle profile deletion
 // Function to handle profile deletion
 const handleDelete = async (rollno, name, set) => {
   const displayName = name;
@@ -60,21 +81,23 @@ const handleDelete = async (rollno, name, set) => {
 
       if (response.status === 200) {
         toast.success("User deleted successfully!");
-        // Update the state after deletion
-        set((prevProfiles) =>
-          prevProfiles.filter((profile) => profile.rollno !== rollno)
-        );
+        // Check if component is still mounted before updating state
+        if (useMounted()) {
+          set((prevProfiles) =>
+            prevProfiles.filter((profile) => profile.rollno !== rollno)
+          );
+        }
       }
     } catch (error) {
       console.error("Error deleting user:", error);
       toast.error("Failed to delete user. Please try again.");
     }
   } else {
-    toast.error("You Don't Have Access to Delete Other User");
+    toast.error("You Don't Have Access to Delete Another User");
   }
 };
 
-function ProfileCard({ profile, set}) {
+function ProfileCard({ profile, set }) {
   const { user } = useAuth();
   return (
     <>
@@ -142,8 +165,15 @@ function ProfileCard({ profile, set}) {
         </div>
 
         <button
-          className="vote w-full hover:scale-[0.9] transition-all duration-100 ease-in  rounded-full px-6 py-2 bg-green-600 text-white font-semibold cursor-pointer"
-          onClick={() => upVote(user.displayName, profile.rollno)}
+          className="vote w-full hover:scale-[0.9] transition-all duration-100 ease-in rounded-full px-6 py-2 bg-green-600 text-white font-semibold cursor-pointer"
+          onClick={() =>
+            upVote(
+              user.displayName,
+              profile.rollno,
+              set,
+              (votes) => (profile.votes = votes)
+            )
+          }
         >
           Up Vote
         </button>

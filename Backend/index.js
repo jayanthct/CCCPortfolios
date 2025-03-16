@@ -52,17 +52,59 @@ app.post("/addUser", (req, res) => {
   );
 });
 
-//delete the user
 app.delete("/deleteuser", (req, res) => {
   const { rollno } = req.body;
 
-  db.query("DELETE FROM userCard WHERE rollno = ?", [rollno], (err, result) => {
-    if (err) {
-      console.error("Error deleting user from the database:", err);
-      return res.status(500).json({ error: "Failed to delete user" });
+  // Fetch the votedUsers list for the user being deleted
+  db.query(
+    "SELECT votedUsers FROM userCard WHERE rollno = ?",
+    [rollno],
+    (err, result) => {
+      if (err) {
+        console.error("Error fetching voted users:", err);
+        return res.status(500).json({ error: "Failed to fetch voted users" });
+      }
+
+      if (result.length > 0) {
+        const votedUsers = result[0].votedUsers;
+
+        if (votedUsers) {
+          // Split the comma-separated values into an array
+          const votedArray = votedUsers.split(",");
+
+          // Decrement votes for each voted user
+          votedArray.forEach((votedRollno) => {
+            db.query(
+              "UPDATE userCard SET votes = GREATEST(votes - 1, 0) WHERE rollno = ?",
+              [votedRollno],
+              (err) => {
+                if (err) {
+                  console.error("Error decrementing votes:", err);
+                }
+              }
+            );
+          });
+        }
+      }
+
+      // Finally, delete the user from the database
+      db.query(
+        "DELETE FROM userCard WHERE rollno = ?",
+        [rollno],
+        (err, result) => {
+          if (err) {
+            console.error("Error deleting user from the database:", err);
+            return res.status(500).json({ error: "Failed to delete user" });
+          }
+          res
+            .status(200)
+            .json({
+              message: "User deleted and votes decremented successfully!",
+            });
+        }
+      );
     }
-    res.status(200).json({ message: "User deleted successfully!" });
-  });
+  );
 });
 
 app.put("/upvote", (req, res) => {
@@ -79,7 +121,7 @@ app.put("/upvote", (req, res) => {
       }
 
       if (result.length === 0) {
-        return res.status(404).json({ error: "Profile not found" });
+        return res.status(404).json({ error: "Your Profile is not found" });
       }
 
       const { votes, votedUsers } = result[0];
